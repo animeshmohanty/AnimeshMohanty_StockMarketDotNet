@@ -15,7 +15,7 @@ namespace EPPlusCore.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer(@"Server=SANTU\MSSQLSERVER2019;Database=StockMarketDB;User ID=sa;Password=pass@word1");
+                optionsBuilder.UseSqlServer("Server=LAPTOP-L9952A4F\SQLEXPRESS\;Database=StockMarketDB;User ID=sa;Password=pass@word1");
             }
         }
 
