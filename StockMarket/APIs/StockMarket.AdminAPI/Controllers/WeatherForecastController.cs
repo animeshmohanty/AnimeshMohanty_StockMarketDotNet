@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
-namespace StaockMarket.AdminAPI.Controllers
+namespace StockMarket.AdminAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
