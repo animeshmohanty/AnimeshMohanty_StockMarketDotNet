@@ -16,15 +16,18 @@ namespace StockMarket.ExcelAPI.Models
         }
 
         public virtual DbSet<Company> Company { get; set; }
+        public virtual DbSet<Ipo> Ipo { get; set; }
+        public virtual DbSet<Sectors> Sectors { get; set; }
+        public virtual DbSet<StockExchange> StockExchange { get; set; }
         public virtual DbSet<StockPrice> StockPrice { get; set; }
-        public virtual DbSet<StockUser> StockUser { get; set; }
+        public virtual DbSet<Users> Users { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. See http://go.microsoft.com/fwlink/?LinkId=723263 for guidance on storing connection strings.
-                optionsBuilder.UseSqlServer("Server=LAPTOP-L9952A4F\\SQLEXPRESS\\MSSQLSERVER2018;Database=StockMarketDB;User ID=sa;Password=pass@word1");
+                optionsBuilder.UseSqlServer("Server=DESKTOP-HUQT5M5\\NAMANSQL;Database=StockMarketDB;User ID=sa;Password=Pass@123");
             }
         }
 
@@ -32,67 +35,176 @@ namespace StockMarket.ExcelAPI.Models
         {
             modelBuilder.Entity<Company>(entity =>
             {
-                entity.HasKey(e => e.Companyname)
-                    .HasName("PK__company__838B6B7A54181764");
+                entity.HasKey(e => e.CompanyName)
+                    .HasName("PK__Company__9BCE05DDFA6D4768");
 
-                entity.ToTable("company");
+                entity.Property(e => e.CompanyName)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
 
-                entity.Property(e => e.Companyname)
-                    .HasColumnName("companyname")
-                    .HasMaxLength(30)
+                entity.Property(e => e.BoardOfDirectors)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Brief)
+                    .IsRequired()
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Ceo)
-                    .HasColumnName("ceo")
-                    .HasMaxLength(20)
+                    .IsRequired()
+                    .HasColumnName("CEO")
+                    .HasMaxLength(30)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Stockexchage)
-                    .HasColumnName("stockexchage")
-                    .HasMaxLength(20)
+                entity.Property(e => e.ListedInSe)
+                    .IsRequired()
+                    .HasColumnName("ListedInSE")
+                    .HasMaxLength(10)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Turnover).HasColumnName("turnover");
+                entity.Property(e => e.Sector)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.StockCode)
+                    .IsRequired()
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Turnover)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
             });
 
-            modelBuilder.Entity<StockPrice>(entity =>
+            modelBuilder.Entity<Ipo>(entity =>
             {
-                entity.HasKey(e => e.RowId)
-                    .HasName("PK__StockPri__FFEE74519E745899");
+                entity.ToTable("IPO");
 
-                entity.Property(e => e.RowId).HasColumnName("RowID");
+                entity.Property(e => e.Id).HasColumnName("id");
 
-                entity.Property(e => e.CurrentPrice)
+                entity.Property(e => e.CompanyName)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NoOfShares)
+                    .IsRequired()
                     .HasMaxLength(30)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Date)
-                    .HasMaxLength(30)
+                entity.Property(e => e.OpenDateTime).HasColumnType("datetime");
+
+                entity.Property(e => e.Remarks)
+                    .IsRequired()
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
                 entity.Property(e => e.StockExchange)
-                    .HasMaxLength(30)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Time)
-                    .HasMaxLength(30)
+                    .IsRequired()
+                    .HasMaxLength(10)
                     .IsUnicode(false);
             });
 
-            modelBuilder.Entity<StockUser>(entity =>
+            modelBuilder.Entity<Sectors>(entity =>
             {
-                entity.ToTable("stock_user");
-
                 entity.Property(e => e.Id)
                     .HasColumnName("id")
                     .ValueGeneratedNever();
 
-                entity.Property(e => e.Pwd)
-                    .HasMaxLength(30)
+                entity.Property(e => e.Brief)
+                    .IsRequired()
+                    .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.Property(e => e.Uname)
+                entity.Property(e => e.SectorName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<StockExchange>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Brief)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ContactAddress)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Remarks)
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.StockExchangeName)
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<StockPrice>(entity =>
+            {
+                entity.HasKey(e => e.StockId)
+                    .HasName("PK__StockPri__CBAD8763CB9697DF");
+
+                entity.Property(e => e.StockId).HasColumnName("stockId");
+
+                entity.Property(e => e.CompanyCode)
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CurrentPrice).HasColumnType("decimal(10, 2)");
+
+                entity.Property(e => e.Date).HasColumnType("date");
+
+                entity.Property(e => e.StockExchange)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Time)
+                    .IsRequired()
                     .HasMaxLength(20)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<Users>(entity =>
+            {
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Confirmed)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.MobileNo)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Password)
+                    .IsRequired()
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UserName)
+                    .IsRequired()
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UserType)
+                    .IsRequired()
+                    .HasMaxLength(10)
                     .IsUnicode(false);
             });
 
